@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World - Docker App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 500px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        .status {
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 1.1em;
+        }
+
+        .status p {
+            margin: 10px 0;
+            color: #666;
+        }
+
+        .status .success {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #764ba2;
+        }
+
+        .response {
+            background: #e8f5e9;
+            border-left: 4px solid #27ae60;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            display: none;
+            text-align: left;
+        }
+
+        .response.show {
+            display: block;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Hello World</h1>
+        
+        <div class="status">
+            <p>Frontend Status: <span class="success">✓ Running</span></p>
+            <p>Backend Status: <span id="backend-status">Checking...</span></p>
+        </div>
+
+        <button onclick="callBackendHello()">Call Backend API</button>
+        <button onclick="checkStatus()">Check Backend Status</button>
+
+        <div id="response" class="response">
+            <strong>Response:</strong>
+            <pre id="response-content"></pre>
+        </div>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'http://localhost:5000';
+
+        // Check backend status on page load
+        window.addEventListener('load', () => {
+            checkBackendStatus();
+        });
+
+        function checkBackendStatus() {
+            fetch(`${BACKEND_URL}/api/status`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('backend-status').innerHTML = '<span class="success">✓ Connected</span>';
+                })
+                .catch(err => {
+                    document.getElementById('backend-status').innerHTML = '<span style="color: #e74c3c;">✗ Disconnected</span>';
+                });
+        }
+
+        function callBackendHello() {
+            fetch(`${BACKEND_URL}/api/hello`)
+                .then(res => res.json())
+                .then(data => {
+                    showResponse(data);
+                })
+                .catch(err => {
+                    showResponse({ error: 'Failed to connect to backend', details: err.message });
+                });
+        }
+
+        function checkStatus() {
+            fetch(`${BACKEND_URL}/api/status`)
+                .then(res => res.json())
+                .then(data => {
+                    showResponse(data);
+                })
+                .catch(err => {
+                    showResponse({ error: 'Failed to connect to backend', details: err.message });
+                });
+        }
+
+        function showResponse(data) {
+            const responseDiv = document.getElementById('response');
+            const responseContent = document.getElementById('response-content');
+            responseContent.textContent = JSON.stringify(data, null, 2);
+            responseDiv.classList.add('show');
+        }
+    </script>
+</body>
+</html>
