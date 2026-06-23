@@ -110,8 +110,9 @@
     </div>
 
     <script>
-        // Use the current host (works for both Docker and browser access)
-        const BACKEND_URL = `http://${window.location.hostname}:5000`;
+        // Relative URL: nginx proxies /api/* to the backend container internally.
+        // Works the same for localhost dev and EC2 — no port 5000 exposed to browser needed.
+        const BACKEND_URL = '';
 
         // Check backend status on page load
         window.addEventListener('load', () => {
