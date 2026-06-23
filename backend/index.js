@@ -3,7 +3,11 @@ const cors = require('cors');
 
 const app = express();
 
-app.use(cors());
+// Allow all CORS requests
+app.use(cors({
+  origin: '*',
+  credentials: false
+}));
 app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
