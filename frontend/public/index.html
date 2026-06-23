@@ -110,7 +110,8 @@
     </div>
 
     <script>
-        const BACKEND_URL = 'http://backend:5000';
+        // Use the current host (works for both Docker and browser access)
+        const BACKEND_URL = `http://${window.location.hostname}:5000`;
 
         // Check backend status on page load
         window.addEventListener('load', () => {
